@@ -45,14 +45,15 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Dup = Input.GetKey(KeyUp) ? 1.0f : 0.0f - (Input.GetKey(KeyDown) ? 1.0f : 0.0f);
-        Dright = Input.GetKey(KeyRight) ? 1.0f : 0.0f - (Input.GetKey(KeyLeft) ? 1.0f : 0.0f);
-
         if (!inputEnabled)
         {
             targetDright = 0;
             targetDup = 0;
+            return;
         }
+        Dup = Input.GetKey(KeyUp) ? 1.0f : 0.0f - (Input.GetKey(KeyDown) ? 1.0f : 0.0f);
+        Dright = Input.GetKey(KeyRight) ? 1.0f : 0.0f - (Input.GetKey(KeyLeft) ? 1.0f : 0.0f);
+
 
         isRunning = Input.GetKey(KeyRun);
 
