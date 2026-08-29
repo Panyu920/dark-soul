@@ -21,6 +21,8 @@ public class ActorController : MonoBehaviour
     private Vector3 verticalVec;
     [SerializeField]
     private float verticalSpeed = 5.0f;
+    [SerializeField]
+    private float rollSpeed = 5.0f;
     private bool lockPlanar;
 
     public Rigidbody rigid;
@@ -44,6 +46,11 @@ public class ActorController : MonoBehaviour
         {
             anim.SetTrigger("jump");
         }
+
+        if (pi.roll)
+        {
+            anim.SetTrigger("roll");
+        }
         if (pi.Dmag > 0.1f)
         {
             model.transform.forward = Vector3.Slerp(model.transform.forward, pi.Dvec, 0.3f);
@@ -53,13 +60,21 @@ public class ActorController : MonoBehaviour
         {
             planarVec = pi.Dmag * model.transform.forward * movingSpeed * (pi.isRunning ? runMultiplyer : 1.0f) ;
         }
+
+        if(rigid.velocity.magnitude > 5.0f)
+        {
+            anim.SetTrigger("roll");
+        }
     }
 
     void FixedUpdate()
     {
         // rigid.position += planarVec * Time.fixedDeltaTime * movingSpeed; 
-        rigid.velocity = new Vector3(planarVec.x, rigid.velocity.y, planarVec.z) + verticalVec;
-        verticalVec = Vector3.zero;
+        if (false == pi.roll)
+        {
+            rigid.velocity = new Vector3(planarVec.x, rigid.velocity.y, planarVec.z) + verticalVec;
+            verticalVec = Vector3.zero;
+        }
     }
 
     void OnJumpEnter()
@@ -75,6 +90,7 @@ public class ActorController : MonoBehaviour
     {
         pi.inputEnabled = true;
         lockPlanar = false;
+        pi.roll = false;
     }
 
     void OnFallEnter()
@@ -91,5 +107,20 @@ public class ActorController : MonoBehaviour
     void NotOnGround()
     {
         anim.SetBool("onGround",false);
+    }
+
+    void OnRollEnter()
+    {
+        if(rigid.velocity == Vector3.zero)
+        {
+            // print("==========");
+            rigid.velocity = model.transform.forward * rollSpeed;
+            // rigid.position = model.transform
+            // print(rigid.velocity);
+        }else
+        {
+            // print(transform.forward);
+           rigid.velocity *= 2; 
+        }
     }
 }

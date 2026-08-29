@@ -12,6 +12,7 @@ public class PlayerInput : MonoBehaviour
     public KeyCode KeyRight = KeyCode.D;
     public KeyCode KeyRun = KeyCode.LeftShift;
     public KeyCode KeyJump = KeyCode.Space;
+    public KeyCode KeyRoll = KeyCode.LeftControl;
 
 
     [Header("===== Out signals =====")]
@@ -23,6 +24,7 @@ public class PlayerInput : MonoBehaviour
     public bool isRunning = false;
     // trigger once signal
     public bool jump = false;
+    public bool roll = false;
     private bool lastJump = false;
     // double trigger
 
@@ -36,11 +38,7 @@ public class PlayerInput : MonoBehaviour
 
 
 
-    void Start()
-
-    {
-
-    }
+    
 
     // Update is called once per frame
     void Update()
@@ -56,6 +54,7 @@ public class PlayerInput : MonoBehaviour
 
 
         isRunning = Input.GetKey(KeyRun);
+        roll = Input.GetKey(KeyRoll);
 
         Dup = Mathf.SmoothDamp(Dup, targetDup, ref velocityDup, 0.1f);
         Dright = Mathf.SmoothDamp(Dright, targetDright, ref velocityDright, 0.1f);
