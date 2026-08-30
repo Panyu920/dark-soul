@@ -13,12 +13,18 @@ public class PlayerInput : MonoBehaviour
     public KeyCode KeyRun = KeyCode.LeftShift;
     public KeyCode KeyJump = KeyCode.Space;
     public KeyCode KeyRoll = KeyCode.LeftControl;
+    public KeyCode KeyJUp = KeyCode.UpArrow;
+    public KeyCode KeyJDown = KeyCode.DownArrow;
+    public KeyCode KeyJLeft = KeyCode.LeftArrow;
+    public KeyCode KeyJRight = KeyCode.RightArrow;
 
 
     [Header("===== Out signals =====")]
     public float Dup;
     public float Dright;
     public float Dmag;
+    public float Jup;
+    public float Jright;
     public Vector3 Dvec;
     // pressing signal
     public bool isRunning = false;
@@ -49,8 +55,11 @@ public class PlayerInput : MonoBehaviour
             targetDup = 0;
             return;
         }
-        Dup = Input.GetKey(KeyUp) ? 1.0f : 0.0f - (Input.GetKey(KeyDown) ? 1.0f : 0.0f);
-        Dright = Input.GetKey(KeyRight) ? 1.0f : 0.0f - (Input.GetKey(KeyLeft) ? 1.0f : 0.0f);
+        targetDup = Input.GetKey(KeyUp) ? 1.0f : 0.0f - (Input.GetKey(KeyDown) ? 1.0f : 0.0f);
+        targetDright = Input.GetKey(KeyRight) ? 1.0f : 0.0f - (Input.GetKey(KeyLeft) ? 1.0f : 0.0f);
+
+        Jup = Input.GetKey(KeyJUp) ? 1.0f : 0.0f - (Input.GetKey(KeyJDown) ? 1.0f : 0.0f);
+        Jright = Input.GetKey(KeyJRight) ? 1.0f : 0.0f - (Input.GetKey(KeyJLeft) ? 1.0f : 0.0f);
 
 
         isRunning = Input.GetKey(KeyRun);
