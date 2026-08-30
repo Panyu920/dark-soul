@@ -15,6 +15,7 @@ public class CameraController : MonoBehaviour
 
      public float minPitch = -30f;
     public float maxPitch = 30f;
+    private Rigidbody rigid;
 
     private float _currentPitch = 20.0f;
     private Transform cameraTransform;
@@ -33,6 +34,7 @@ public class CameraController : MonoBehaviour
         pi = playerHandle.GetComponent<PlayerInput>();
         model = playerHandle.gameObject.GetComponent<ActorController>().model;
         cameraTransform = Camera.main.transform;
+        rigid = playerHandle.GetComponent<Rigidbody>();
 
         if (null == pi)
         {
@@ -41,12 +43,15 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 tempModelAngel = model.transform.eulerAngles;
-        playerHandle.transform.Rotate(Vector3.up , pi.Jright * hSpeed * Time.deltaTime); 
+        playerHandle.transform.Rotate(Vector3.up , pi.Jright * hSpeed * Time.fixedDeltaTime); 
+        // playerHandle.g
+        //  Quaternion deltaRotation = Quaternion.Euler(0, pi.Jright*hSpeed * Time.fixedDeltaTime, 0);
+        // rigid.MoveRotation(rigid.rotation * deltaRotation);
 
-        _currentPitch -= pi.Jup * vSpeed*Time.deltaTime;
+        _currentPitch -= pi.Jup * vSpeed*Time.fixedDeltaTime;
         _currentPitch = Mathf.Clamp(_currentPitch,minPitch,maxPitch);
 
         cameraHandle.transform.localRotation = Quaternion.Euler(_currentPitch, 0, 0);
@@ -55,7 +60,7 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        cameraTransform.eulerAngles = transform.eulerAngles;
+        cameraTransform.eulerAngles = Vector3.Lerp(cameraTransform.eulerAngles,transform.eulerAngles,cameraSpeed);
         cameraTransform.position = Vector3.Lerp(cameraTransform.position, transform.position,cameraSpeed);
     }
 }
