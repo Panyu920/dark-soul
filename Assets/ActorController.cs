@@ -22,7 +22,7 @@ public class ActorController : MonoBehaviour
     [SerializeField]
     private float verticalSpeed = 5.0f;
     [SerializeField]
-    private float rollSpeed = 5.0f;
+    private float rollSpeed = 2.0f;
     private bool lockPlanar;
 
     public Rigidbody rigid;
@@ -58,10 +58,10 @@ public class ActorController : MonoBehaviour
 
         if (false == lockPlanar)
         {
-            planarVec = pi.Dmag * model.transform.forward * movingSpeed * (pi.isRunning ? runMultiplyer : 1.0f) ;
+            planarVec = pi.Dmag * model.transform.forward * movingSpeed * (pi.isRunning ? runMultiplyer : 1.0f);
         }
 
-        if(rigid.velocity.magnitude > 5.0f)
+        if (rigid.velocity.magnitude > 5.0f)
         {
             anim.SetTrigger("roll");
         }
@@ -70,10 +70,12 @@ public class ActorController : MonoBehaviour
     void FixedUpdate()
     {
         // rigid.position += planarVec * Time.fixedDeltaTime * movingSpeed; 
-        if (false == pi.roll)
+        if (true == pi.roll && rigid.velocity == Vector3.zero)
         {
-            rigid.velocity = new Vector3(planarVec.x, rigid.velocity.y, planarVec.z) + verticalVec;
-            verticalVec = Vector3.zero;
+            rigid.velocity = model.transform.forward * 3;
+        }else {
+        rigid.velocity = new Vector3(planarVec.x, rigid.velocity.y, planarVec.z) + verticalVec;
+        verticalVec = Vector3.zero;
         }
     }
 
@@ -82,7 +84,7 @@ public class ActorController : MonoBehaviour
         // print("jump enter");
         pi.inputEnabled = false;
         lockPlanar = true;
-        verticalVec = new Vector3(0,verticalSpeed,0);
+        verticalVec = new Vector3(0, verticalSpeed, 0);
     }
 
 
@@ -101,26 +103,34 @@ public class ActorController : MonoBehaviour
 
     void OnGround()
     {
-        anim.SetBool("onGround",true);
+        anim.SetBool("onGround", true);
     }
 
     void NotOnGround()
     {
-        anim.SetBool("onGround",false);
+        anim.SetBool("onGround", false);
     }
 
     void OnRollEnter()
     {
-        if(rigid.velocity == Vector3.zero)
+        pi.inputEnabled = false;
+        lockPlanar = true;
+        if (rigid.velocity == Vector3.zero)
         {
-            // print("==========");
-            rigid.velocity = model.transform.forward * rollSpeed;
-            // rigid.position = model.transform
-            // print(rigid.velocity);
-        }else
-        {
-            // print(transform.forward);
-           rigid.velocity *= 2; 
+            rigid.velocity = model.transform.forward * 1;
         }
+    }
+
+    void OnRollUpdate()
+    {
+        if (rigid.velocity == Vector3.zero)
+        {
+        // print(rigid.velocity);
+            rigid.velocity = model.transform.forward * 10;
+        // print(rigid.velocity);
+        }
+
+        rigid.velocity *= anim.GetFloat("rollVelocity");
+        // print(anim.GetFloat("rollVelocity"));
     }
 }
