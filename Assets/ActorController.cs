@@ -34,6 +34,7 @@ public class ActorController : MonoBehaviour
     public Rigidbody rigid;
 
     public float runMultiplyer = 2.7f;
+    private float lerpWeight = 0.0f;
 
 
     void Awake()
@@ -154,18 +155,38 @@ public class ActorController : MonoBehaviour
 
     void OnAttack1hAEnter()
     {
-        anim.SetLayerWeight(anim.GetLayerIndex("Attack"),1.0f);
-        pi.inputEnabled = false;
+        // pi.inputEnabled = false;
+        lerpWeight = 1.0f;
+            // anim.ResetTrigger("attack");
     }
+    void OnAttack1hAUpdate()
+    {
+        int layerIndex = anim.GetLayerIndex("Attack");
+        float currentWeight = anim.GetLayerWeight(layerIndex);
+        currentWeight = Mathf.Lerp(currentWeight,lerpWeight,0.1f);
+        anim.SetLayerWeight(layerIndex,currentWeight);
+        thrustVec = model.transform.forward * anim.GetFloat("attack1hAVelocity");
+    }
+    void OnAttack1hAExit()
+    {
+        // anim.SetLayerWeight(anim.GetLayerIndex("Attack"),1.0f);
+        // pi.inputEnabled = false;
+            pi.attack = false;
+            // print(111);
+    }
+    
     void OnAttackIdle()
     {
         pi.inputEnabled = true;
-            pi.attack = false;
-        anim.SetLayerWeight(anim.GetLayerIndex("Attack"),0.0f);
+        // anim.SetLayerWeight(anim.GetLayerIndex("Attack"),0.0f);
+            lerpWeight = 0;
     }
 
-    void OnAttack1hAUpdate()
+    void OnAttackIdleUpdate()
     {
-        thrustVec = model.transform.forward * anim.GetFloat("attack1hAVelocity");
+        int layerIndex = anim.GetLayerIndex("Attack");
+        float currentWeight = anim.GetLayerWeight(layerIndex);
+        currentWeight = Mathf.Lerp(currentWeight,lerpWeight,0.1f);
+        anim.SetLayerWeight(layerIndex,currentWeight);
     }
 }
