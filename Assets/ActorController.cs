@@ -18,7 +18,7 @@ public class ActorController : MonoBehaviour
     private float movingSpeed = 1.4f;
 
     private Vector3 planarVec;
-    private Vector3 verticalVec;
+    private Vector3 thrustVec;
     [SerializeField]
     private float verticalSpeed = 5.0f;
     [SerializeField]
@@ -51,6 +51,11 @@ public class ActorController : MonoBehaviour
         {
             anim.SetTrigger("roll");
         }
+
+        if (pi.attack && anim.GetBool("onGround"))
+        {
+            anim.SetTrigger("attack");
+        }
         if (pi.Dmag > 0.1f)
         {
             model.transform.forward = Vector3.Slerp(model.transform.forward, pi.Dvec, 0.3f);
@@ -74,8 +79,8 @@ public class ActorController : MonoBehaviour
         {
             rigid.velocity = model.transform.forward * 3;
         }else {
-        rigid.velocity = new Vector3(planarVec.x, rigid.velocity.y, planarVec.z) + verticalVec;
-        verticalVec = Vector3.zero;
+        rigid.velocity = new Vector3(planarVec.x, rigid.velocity.y, planarVec.z) + thrustVec;
+        thrustVec = Vector3.zero;
         }
     }
 
@@ -84,7 +89,7 @@ public class ActorController : MonoBehaviour
         // print("jump enter");
         pi.inputEnabled = false;
         lockPlanar = true;
-        verticalVec = new Vector3(0, verticalSpeed, 0);
+        thrustVec = new Vector3(0, verticalSpeed, 0);
     }
 
 
@@ -123,14 +128,32 @@ public class ActorController : MonoBehaviour
 
     void OnRollUpdate()
     {
-        if (rigid.velocity == Vector3.zero)
-        {
-        // print(rigid.velocity);
-            rigid.velocity = model.transform.forward * 10;
-        // print(rigid.velocity);
-        }
+        // if (rigid.velocity == Vector3.zero)
+        // {
+        // // print(rigid.velocity);
+        //     rigid.velocity = model.transform.forward * 10;
+        // // print(rigid.velocity);
+        // }
+        thrustVec = model.transform.forward * anim.GetFloat("rollVelocity");
 
-        rigid.velocity *= anim.GetFloat("rollVelocity");
+        // rigid.velocity *= anim.GetFloat("rollVelocity");
         // print(anim.GetFloat("rollVelocity"));
+    }
+
+    void OnAttack1hAEnter()
+    {
+        anim.SetLayerWeight(anim.GetLayerIndex("Attack"),1.0f);
+        pi.inputEnabled = false;
+    }
+    void OnAttackIdle()
+    {
+        pi.inputEnabled = true;
+            pi.attack = false;
+        anim.SetLayerWeight(anim.GetLayerIndex("Attack"),0.0f);
+    }
+
+    void OnAttack1hAUpdate()
+    {
+        thrustVec = model.transform.forward * anim.GetFloat("attack1hAVelocity");
     }
 }

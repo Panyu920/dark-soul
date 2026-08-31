@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
@@ -30,8 +31,9 @@ public class PlayerInput : MonoBehaviour
     public bool isRunning = false;
     // trigger once signal
     public bool jump = false;
-    public bool roll = false;
     private bool lastJump = false;
+    public bool roll = false;
+    public bool attack = false;
     // double trigger
 
 
@@ -49,15 +51,15 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!inputEnabled)
+      
+        targetDup = Input.GetKey(KeyUp) ? 1.0f : 0.0f - (Input.GetKey(KeyDown) ? 1.0f : 0.0f);
+        targetDright = Input.GetKey(KeyRight) ? 1.0f : 0.0f - (Input.GetKey(KeyLeft) ? 1.0f : 0.0f);
+  if (!inputEnabled)
         {
             targetDright = 0;
             targetDup = 0;
-            return;
+            // return;
         }
-        targetDup = Input.GetKey(KeyUp) ? 1.0f : 0.0f - (Input.GetKey(KeyDown) ? 1.0f : 0.0f);
-        targetDright = Input.GetKey(KeyRight) ? 1.0f : 0.0f - (Input.GetKey(KeyLeft) ? 1.0f : 0.0f);
-
         Jup = Input.GetKey(KeyJUp) ? 1.0f : 0.0f - (Input.GetKey(KeyJDown) ? 1.0f : 0.0f);
         Jright = Input.GetKey(KeyJRight) ? 1.0f : 0.0f - (Input.GetKey(KeyJLeft) ? 1.0f : 0.0f);
 
@@ -73,6 +75,7 @@ public class PlayerInput : MonoBehaviour
         Dvec = Dup * transform.forward + Dright * transform.right;
 
         Jump();
+        Attack();
     }
 
     private void SquareToCircle(ref float x, ref float y)
@@ -97,5 +100,13 @@ public class PlayerInput : MonoBehaviour
         }
 
         lastJump = jump;
+    }
+
+    void Attack()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            attack = true;
+        }
     }
 }
