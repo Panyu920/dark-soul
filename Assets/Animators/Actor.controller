@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:yousandi.cn,2023:
+--- !u!114 &-6402126584272054489
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fa97bb974695b24bbe4e9b34ce81e56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  messages:
+  - OnAttackIdle
 --- !u!1102 &-6203691107360276947
 AnimatorState:
   serializedVersion: 7
@@ -44,7 +58,9 @@ AnimatorState:
   m_OverrideDuration: 1
   m_Transitions:
   - {fileID: 5580974521233912022}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 8301219313567465868}
+  - {fileID: 7611096233560319342}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -60,6 +76,21 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &-5674656149231117511
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d09a84626668ee4eaf00e7650fb103b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clearAtEnter:
+  - attack
+  clearAtExit: []
 --- !u!1101 &-5645572557841754667
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -316,14 +347,20 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: jump
-    m_Type: 9
+  - m_Name: rollVelocity
+    m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: onGround
-    m_Type: 4
+  - m_Name: attack1hAVelocity
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: jump
+    m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -334,17 +371,17 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: rollVelocity
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
   - m_Name: attack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 1
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: onGround
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
@@ -362,12 +399,12 @@ AnimatorController:
   - serializedVersion: 5
     m_Name: Attack
     m_StateMachine: {fileID: -2692405993501573343}
-    m_Mask: {fileID: 0}
+    m_Mask: {fileID: 31900000, guid: f7122d86ec3487d4ab8718c693638dc1, type: 2}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
     m_SyncedLayerIndex: -1
-    m_DefaultWeight: 1
+    m_DefaultWeight: 0
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
@@ -545,6 +582,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   messages:
   - OnRollUpdate
+--- !u!114 &3796192005649269381
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ea42ccdff5c3114ca4f75ae55b7e207, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  messages:
+  - OnGroundExit
 --- !u!1101 &3890870191180863877
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -614,7 +665,9 @@ AnimatorState:
   m_OverrideDuration: 1
   m_Transitions:
   - {fileID: 2368724805119958575}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -5674656149231117511}
+  - {fileID: -6402126584272054489}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -690,6 +743,7 @@ AnimatorState:
   m_StateMachineBehaviours:
   - {fileID: -513152623448541867}
   - {fileID: 1473341902676628955}
+  - {fileID: 3796192005649269381}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -739,3 +793,31 @@ AnimatorStateTransition:
   m_RootMotionBlendCurveMode: 0
   m_PoseBlendCurveKeyframes: []
   m_RootMotionBlendCurveKeyframes: []
+--- !u!114 &7611096233560319342
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f3a3ca201594154ea267e65e74d795b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  messages:
+  - OnAttack1hAUpdate
+--- !u!114 &8301219313567465868
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fa97bb974695b24bbe4e9b34ce81e56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  messages:
+  - OnAttack1hAEnter

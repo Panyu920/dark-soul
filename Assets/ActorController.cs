@@ -8,7 +8,13 @@ using UnityEngine.Video;
 public class ActorController : MonoBehaviour
 {
     public GameObject model;
+    private CapsuleCollider col;
     // Start is called before the first frame update
+
+    [Space(10)]
+    [Header("===== friction setting")]
+    public PhysicMaterial frictionOne;
+    public PhysicMaterial frictionZero;
 
     [SerializeField]
     private Animator anim;
@@ -35,6 +41,7 @@ public class ActorController : MonoBehaviour
         pi = GetComponent<PlayerInput>();
         anim = model.GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
+        col = GetComponent<CapsuleCollider>();
     }
 
     // Update is called once per frame
@@ -98,8 +105,13 @@ public class ActorController : MonoBehaviour
         pi.inputEnabled = true;
         lockPlanar = false;
         pi.roll = false;
+        col.material = frictionOne;
     }
 
+    void OnGroundExit()
+    {
+        col.material = frictionZero;
+    }
     void OnFallEnter()
     {
         pi.inputEnabled = true;
