@@ -374,6 +374,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 809668177}
+  frictionOne: {fileID: 13400000, guid: 99d25b9141ae4524dae8b4e2a1e40810, type: 2}
+  frictionZero: {fileID: 13400000, guid: 316e5d78ed19e1b4f94c7dc846d7d8c2, type: 2}
   anim: {fileID: 0}
   movingSpeed: 1.4
   verticalSpeed: 3
@@ -412,6 +414,7 @@ MonoBehaviour:
   isRunning: 0
   jump: 0
   roll: 0
+  attack: 0
   inputEnabled: 1
 --- !u!54 &402317946
 Rigidbody:
