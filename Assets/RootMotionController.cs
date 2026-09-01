@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimEvenHandle : MonoBehaviour
+public class RootMotionController : MonoBehaviour
 {
     // Start is called before the first frame update
     private Animator anim;
@@ -11,9 +11,8 @@ public class AnimEvenHandle : MonoBehaviour
         anim = GetComponent<Animator>(); 
     }
 
-    public void ResetTrigger(string name)
+    void OnAnimatorMove()
     {
-        anim.ResetTrigger(name);
-        // print(name);
+        SendMessageUpwards("OnAnimatorRM",anim.deltaPosition); 
     }
 }

@@ -36,6 +36,8 @@ public class ActorController : MonoBehaviour
     public float runMultiplyer = 2.7f;
     private float lerpWeight = 0.0f;
 
+    // 动画位移
+    private Vector3 deltaPosition;
 
     void Awake()
     {
@@ -83,6 +85,8 @@ public class ActorController : MonoBehaviour
 
     void FixedUpdate()
     {
+        rigid.position += deltaPosition;
+        deltaPosition = Vector3.zero;
         // rigid.position += planarVec * Time.fixedDeltaTime * movingSpeed; 
         if (true == pi.roll && rigid.velocity == Vector3.zero)
         {
@@ -189,5 +193,20 @@ public class ActorController : MonoBehaviour
         float currentWeight = anim.GetLayerWeight(layerIndex);
         currentWeight = Mathf.Lerp(currentWeight,lerpWeight,0.1f);
         anim.SetLayerWeight(layerIndex,currentWeight);
+    }
+
+    bool CheckState(string state, string layerName)
+    {
+        int layerIndex = anim.GetLayerIndex(layerName);
+        return  anim.GetCurrentAnimatorStateInfo(layerIndex).IsName(state);
+    }
+
+    void OnAnimatorRM(object _deltaPosition)
+    {
+        print(_deltaPosition);
+        if (CheckState("attack1hC", "Attack"))
+        {
+            deltaPosition += (Vector3)_deltaPosition;  
+        }
     }
 }
