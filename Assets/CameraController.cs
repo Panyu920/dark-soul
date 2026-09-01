@@ -56,11 +56,13 @@ public class CameraController : MonoBehaviour
 
         cameraHandle.transform.localRotation = Quaternion.Euler(_currentPitch, 0, 0);
         model.transform.eulerAngles = tempModelAngel;
+        // cameraTransform.LookAt(cameraHandle.transform);
     }
 
     void LateUpdate()
     {
         cameraTransform.eulerAngles = Vector3.Lerp(cameraTransform.eulerAngles,transform.eulerAngles,cameraSpeed);
+        // cameraTransform.LookAt(transform);
         cameraTransform.position = Vector3.Lerp(cameraTransform.position, transform.position,cameraSpeed);
     }
 }

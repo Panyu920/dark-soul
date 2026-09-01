@@ -160,7 +160,7 @@ public class ActorController : MonoBehaviour
 
     void OnAttack1hAEnter()
     {
-        // pi.inputEnabled = false;
+        pi.inputEnabled = false;
         lerpWeight = 1.0f;
             // anim.ResetTrigger("attack");
     }
