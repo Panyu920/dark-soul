@@ -104,7 +104,7 @@ public class PlayerInput : MonoBehaviour
 
     void Attack()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown((int)MouseButton.Right))
         {
             attack = true;
         }

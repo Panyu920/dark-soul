@@ -63,6 +63,7 @@ public class ActorController : MonoBehaviour
         if (pi.attack && anim.GetBool("onGround"))
         {
             anim.SetTrigger("attack");
+            pi.attack = false;
         }
         if (pi.Dmag > 0.1f)
         {
@@ -171,13 +172,13 @@ public class ActorController : MonoBehaviour
     {
         // anim.SetLayerWeight(anim.GetLayerIndex("Attack"),1.0f);
         // pi.inputEnabled = false;
-            pi.attack = false;
             // print(111);
     }
     
     void OnAttackIdle()
     {
         pi.inputEnabled = true;
+            pi.attack = false;
         // anim.SetLayerWeight(anim.GetLayerIndex("Attack"),0.0f);
             lerpWeight = 0;
     }
