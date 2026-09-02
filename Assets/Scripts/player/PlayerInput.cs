@@ -57,6 +57,7 @@ public class PlayerInput : MonoBehaviour
     private InputState rollState =new();
     private InputState defenseState =new();
     private InputState attackState =new();
+    private InputState upState =new();
 
 
 
@@ -65,11 +66,13 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        runState.Tick(Input.GetKey(KeyRun));
-        jumpState.Tick(Input.GetKey(KeyJump));
-        rollState.Tick(Input.GetKey(KeyRoll));
-        defenseState.Tick(Input.GetKey(KeyDefense));
-        attackState.Tick(Input.GetKey(KeyAttack));
+        runState.Tick(Input.GetKey(KeyRun),Time.deltaTime);
+        jumpState.Tick(Input.GetKey(KeyJump),Time.deltaTime);
+        rollState.Tick(Input.GetKey(KeyRoll),Time.deltaTime);
+        defenseState.Tick(Input.GetKey(KeyDefense),Time.deltaTime);
+        attackState.Tick(Input.GetKey(KeyAttack),Time.deltaTime);
+        
+        upState.Tick(Input.GetKey(KeyUp),Time.deltaTime);
 
         targetDup = Input.GetKey(KeyUp) ? 1.0f : 0.0f - (Input.GetKey(KeyDown) ? 1.0f : 0.0f);
         targetDright = Input.GetKey(KeyRight) ? 1.0f : 0.0f - (Input.GetKey(KeyLeft) ? 1.0f : 0.0f);
@@ -107,7 +110,7 @@ public class PlayerInput : MonoBehaviour
 
 
         isRunning = runState.OnPressing;
-        roll = rollState.OnPress;
+        roll = rollState.OnPress || upState.OnDoubleClick;
         jump = jumpState.OnPress;
         defense = defenseState.OnPressing;
         attack = attackState.OnPress;

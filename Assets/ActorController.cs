@@ -88,10 +88,14 @@ public class ActorController : MonoBehaviour
     {
         rigid.position += deltaPosition;
         deltaPosition = Vector3.zero;
-        // rigid.position += planarVec * Time.fixedDeltaTime * movingSpeed; 
-        if (true == pi.roll && rigid.velocity == Vector3.zero)
+        // rigid.position += planarVec * Time.fixedDeltaTime * movingSpeed;) 
+        // print(rigid.velocity.magnitude);    
+        if (true == pi.roll )
         {
-            rigid.velocity = model.transform.forward * 3;
+            if ( rigid.velocity.magnitude < 0.2f){
+                rigid.velocity = model.transform.forward * 3;
+            }
+            // print(1111);
         }else {
         rigid.velocity = new Vector3(planarVec.x, rigid.velocity.y, planarVec.z) + thrustVec;
         thrustVec = Vector3.zero;
@@ -204,7 +208,7 @@ public class ActorController : MonoBehaviour
 
     void OnAnimatorRM(object _deltaPosition)
     {
-        print(_deltaPosition);
+        // print(_deltaPosition);
         if (CheckState("attack1hC", "Attack"))
         {
             deltaPosition += (Vector3)_deltaPosition;  
