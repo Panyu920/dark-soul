@@ -13,7 +13,9 @@ public class InputState
     private bool currentState;
     private bool lastState;
 
-    private float lastTime;
+    // private float lastTime;
+
+    private MyTimer doubleClickTimer = new();
     
     
 
@@ -24,21 +26,30 @@ public class InputState
 
         OnPress=false;
         OnRelease = false;
-        lastTime += dt;
         OnDoubleClick = false;
+
+        doubleClickTimer.Tick(dt);
         if(currentState != lastState)
         {
             if(currentState)
             {
                 OnPress = true;
-                if( lastTime < doubleDuration)
+                // if( lastTime < doubleDuration)
+                // {
+                //     OnDoubleClick = true;
+                //     lastTime = 0;
+                // }
+                // else
+                // {
+                //     lastTime = 0;
+                // }
+
+                if (doubleClickTimer.state != MyTimer.State.RUN)
                 {
-                    OnDoubleClick = true;
-                    lastTime = 0;
-                }
-                else
+                    StartTimer(doubleClickTimer,doubleDuration);
+                }else
                 {
-                    lastTime = 0;
+                    OnDoubleClick = doubleClickTimer.state == MyTimer.State.RUN;
                 }
             }else
             {
@@ -46,5 +57,11 @@ public class InputState
             }
         }
         lastState = currentState;
+    }
+
+    private void StartTimer(MyTimer timer, float duration)
+    {
+        timer.duration = duration;
+        timer.go();
     }
 }
