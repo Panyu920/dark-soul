@@ -667,6 +667,11 @@ MonoBehaviour:
   KeyJDown: 274
   KeyJLeft: 276
   KeyJRight: 275
+  KeyDefense: 102
+  KeyAttack: 323
+  mouseEnable: 1
+  mouseSensitivityY: 3
+  mouseSensitivityX: 2.5
   Dup: 0
   Dright: 0
   Dmag: 0
@@ -674,6 +679,7 @@ MonoBehaviour:
   Jright: 0
   Dvec: {x: 0, y: 0, z: 0}
   isRunning: 0
+  defense: 0
   jump: 0
   roll: 0
   attack: 0
@@ -1043,7 +1049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 385182e462ecfc5418ba73647760ee27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 0, y: 57, z: 330}
+  offset: {x: 0, y: 10, z: 300}
 --- !u!1 &1614658236
 GameObject:
   m_ObjectHideFlags: 0

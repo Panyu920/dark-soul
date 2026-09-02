@@ -20,6 +20,8 @@ public class PlayerInput : MonoBehaviour
     public KeyCode KeyJRight = KeyCode.RightArrow;
     public KeyCode KeyDefense = KeyCode.F;
     [Header("===== Key Setting =====")]
+    public KeyCode KeyAttack = KeyCode.Mouse0;
+    [Header("===== Key Setting =====")]
     public bool mouseEnable = true;
     public float mouseSensitivityY;
     public float mouseSensitivityX;
@@ -50,6 +52,12 @@ public class PlayerInput : MonoBehaviour
     private float velocityDup;
     private float velocityDright;
 
+    private InputState runState =new();
+    private InputState jumpState =new();
+    private InputState rollState =new();
+    private InputState defenseState =new();
+    private InputState attackState =new();
+
 
 
 
@@ -57,6 +65,11 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        runState.Tick(Input.GetKey(KeyRun));
+        jumpState.Tick(Input.GetKey(KeyJump));
+        rollState.Tick(Input.GetKey(KeyRoll));
+        defenseState.Tick(Input.GetKey(KeyDefense));
+        attackState.Tick(Input.GetKey(KeyAttack));
 
         targetDup = Input.GetKey(KeyUp) ? 1.0f : 0.0f - (Input.GetKey(KeyDown) ? 1.0f : 0.0f);
         targetDright = Input.GetKey(KeyRight) ? 1.0f : 0.0f - (Input.GetKey(KeyLeft) ? 1.0f : 0.0f);
@@ -77,9 +90,9 @@ public class PlayerInput : MonoBehaviour
         }
 
 
-        isRunning = Input.GetKey(KeyRun);
-        roll = Input.GetKey(KeyRoll);
-        defense = Input.GetKey(KeyDefense);
+        // isRunning = Input.GetKey(KeyRun);
+        // roll = Input.GetKey(KeyRoll);
+        // defense = Input.GetKey(KeyDefense);
         // if(defense && Input.GetKeyUp(KeyDefense))
         // {
         //     defense
@@ -92,8 +105,12 @@ public class PlayerInput : MonoBehaviour
         Dmag = Mathf.Sqrt(Dup * Dup + Dright * Dright);
         Dvec = Dup * transform.forward + Dright * transform.right;
 
-        Jump();
-        Attack();
+
+        isRunning = runState.OnPressing;
+        roll = rollState.OnPress;
+        jump = jumpState.OnPress;
+        defense = defenseState.OnPressing;
+        attack = attackState.OnPress;
     }
 
     private void SquareToCircle(ref float x, ref float y)
