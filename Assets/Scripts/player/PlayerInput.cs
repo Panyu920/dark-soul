@@ -19,6 +19,10 @@ public class PlayerInput : MonoBehaviour
     public KeyCode KeyJLeft = KeyCode.LeftArrow;
     public KeyCode KeyJRight = KeyCode.RightArrow;
     public KeyCode KeyDefense = KeyCode.F;
+    [Header("===== Key Setting =====")]
+    public bool mouseEnable = true;
+    public float mouseSensitivityY;
+    public float mouseSensitivityX;
 
 
     [Header("===== Out signals =====")]
@@ -62,8 +66,15 @@ public class PlayerInput : MonoBehaviour
             targetDup = 0;
             // return;
         }
+        if (mouseEnable)
+        {
+            Jup = Input.GetAxis("Mouse Y") * mouseSensitivityY;
+            Jright = Input.GetAxis("Mouse X") * mouseSensitivityX;
+        }else
+        {
         Jup = Input.GetKey(KeyJUp) ? 1.0f : 0.0f - (Input.GetKey(KeyJDown) ? 1.0f : 0.0f);
         Jright = Input.GetKey(KeyJRight) ? 1.0f : 0.0f - (Input.GetKey(KeyJLeft) ? 1.0f : 0.0f);
+        }
 
 
         isRunning = Input.GetKey(KeyRun);

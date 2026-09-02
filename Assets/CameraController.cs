@@ -27,6 +27,7 @@ public class CameraController : MonoBehaviour
     private float vSpeed;
     [SerializeField]
     private float cameraSpeed;
+    private float yaw;
     void Awake()
     {
         cameraHandle = transform.parent.gameObject;
@@ -35,6 +36,7 @@ public class CameraController : MonoBehaviour
         model = playerHandle.gameObject.GetComponent<ActorController>().model;
         cameraTransform = Camera.main.transform;
         rigid = playerHandle.GetComponent<Rigidbody>();
+        Cursor.lockState = CursorLockMode.Locked;
 
         if (null == pi)
         {
@@ -43,18 +45,35 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         Vector3 tempModelAngel = model.transform.eulerAngles;
-        playerHandle.transform.Rotate(Vector3.up , pi.Jright * hSpeed * Time.fixedDeltaTime); 
+        
+        // Quaternion targetAngel = playerHandle.transform.rotation; 
+        playerHandle.transform.Rotate(Vector3.up , pi.Jright * hSpeed * Time.deltaTime); 
         // playerHandle.g
         //  Quaternion deltaRotation = Quaternion.Euler(0, pi.Jright*hSpeed * Time.fixedDeltaTime, 0);
         // rigid.MoveRotation(rigid.rotation * deltaRotation);
 
-        _currentPitch -= pi.Jup * vSpeed*Time.fixedDeltaTime;
+        // 累积角度增量
+    // yaw += pi.Jright * hSpeed * Time.deltaTime;
+
+    // // 目标旋转：只绕Y轴
+    // Quaternion targetRot = Quaternion.Euler(0, yaw, 0);
+
+    // // 平滑插值
+    // playerHandle.transform.rotation = Quaternion.Lerp(
+    //     playerHandle.transform.rotation,
+    //     targetRot,
+    //     0.1f 
+    // );
+
+        _currentPitch -= pi.Jup * vSpeed*Time.deltaTime;
         _currentPitch = Mathf.Clamp(_currentPitch,minPitch,maxPitch);
 
         cameraHandle.transform.localRotation = Quaternion.Euler(_currentPitch, 0, 0);
+        // Quaternion.Lerp(cameraHandle.transform.localRotation,Quaternion.Euler(_currentPitch,0,0),0.1f);
+
         model.transform.eulerAngles = tempModelAngel;
         // cameraTransform.LookAt(cameraHandle.transform);
     }
@@ -62,7 +81,9 @@ public class CameraController : MonoBehaviour
     void LateUpdate()
     {
         cameraTransform.eulerAngles = Vector3.Lerp(cameraTransform.eulerAngles,transform.eulerAngles,cameraSpeed);
-        // cameraTransform.LookAt(transform);
+        // Quaternion.Lerp(cameraHandle.transform.localRotation,Quaternion.Euler(_currentPitch,0,0),0.1f);
+        // cameraTransform.LookAt(cameraHandle.transform);
+        // yaw = 0;
         cameraTransform.position = Vector3.Lerp(cameraTransform.position, transform.position,cameraSpeed);
     }
 }
