@@ -1,10 +1,10 @@
 {
-  "unity_port": 52556,
-  "stream_port": 52925,
+  "unity_port": 53960,
+  "stream_port": 55059,
   "created_date": "2026-08-28T06:32:43.973Z",
   "project_path": "D:/csharp/project/dark_soul/Assets",
   "reloading": false,
   "reason": "ready",
-  "seq": 55923,
-  "last_heartbeat": "2026-08-29T09:03:24.440Z"
+  "seq": 11449,
+  "last_heartbeat": "2026-09-02T02:38:16.990Z"
 }

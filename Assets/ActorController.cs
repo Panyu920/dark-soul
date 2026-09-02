@@ -57,10 +57,11 @@ public class ActorController : MonoBehaviour
             anim.SetTrigger("jump");
         }
 
-        if (pi.roll)
+        else if (pi.roll)
         {
             anim.SetTrigger("roll");
         }
+        anim.SetBool("defense",pi.defense);
 
         if (pi.attack && anim.GetBool("onGround"))
         {

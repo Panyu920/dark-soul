@@ -18,6 +18,7 @@ public class PlayerInput : MonoBehaviour
     public KeyCode KeyJDown = KeyCode.DownArrow;
     public KeyCode KeyJLeft = KeyCode.LeftArrow;
     public KeyCode KeyJRight = KeyCode.RightArrow;
+    public KeyCode KeyDefense = KeyCode.F;
 
 
     [Header("===== Out signals =====")]
@@ -29,6 +30,7 @@ public class PlayerInput : MonoBehaviour
     public Vector3 Dvec;
     // pressing signal
     public bool isRunning = false;
+    public bool defense = false;
     // trigger once signal
     public bool jump = false;
     private bool lastJump = false;
@@ -46,15 +48,15 @@ public class PlayerInput : MonoBehaviour
 
 
 
-    
+
 
     // Update is called once per frame
     void Update()
     {
-      
+
         targetDup = Input.GetKey(KeyUp) ? 1.0f : 0.0f - (Input.GetKey(KeyDown) ? 1.0f : 0.0f);
         targetDright = Input.GetKey(KeyRight) ? 1.0f : 0.0f - (Input.GetKey(KeyLeft) ? 1.0f : 0.0f);
-  if (!inputEnabled)
+        if (!inputEnabled)
         {
             targetDright = 0;
             targetDup = 0;
@@ -66,12 +68,17 @@ public class PlayerInput : MonoBehaviour
 
         isRunning = Input.GetKey(KeyRun);
         roll = Input.GetKey(KeyRoll);
+        defense = Input.GetKey(KeyDefense);
+        // if(defense && Input.GetKeyUp(KeyDefense))
+        // {
+        //     defense
+        // } 
 
         Dup = Mathf.SmoothDamp(Dup, targetDup, ref velocityDup, 0.1f);
         Dright = Mathf.SmoothDamp(Dright, targetDright, ref velocityDright, 0.1f);
-        SquareToCircle(ref Dright,ref Dup);
+        SquareToCircle(ref Dright, ref Dup);
 
-        Dmag = Mathf.Sqrt(Dup*Dup + Dright * Dright);
+        Dmag = Mathf.Sqrt(Dup * Dup + Dright * Dright);
         Dvec = Dup * transform.forward + Dright * transform.right;
 
         Jump();
@@ -80,17 +87,17 @@ public class PlayerInput : MonoBehaviour
 
     private void SquareToCircle(ref float x, ref float y)
     {
-        float u = x* Mathf.Sqrt(1- y  *  y /2);
-        float v = y* Mathf.Sqrt(1- x  *  x /2);
+        float u = x * Mathf.Sqrt(1 - y * y / 2);
+        float v = y * Mathf.Sqrt(1 - x * x / 2);
         x = u;
         y = v;
     }
 
     private void Jump()
     {
-        bool newJump = Input.GetKey(KeyJump); 
+        bool newJump = Input.GetKey(KeyJump);
 
-        if(newJump != lastJump && newJump)
+        if (newJump != lastJump && newJump)
         {
             jump = true;
         }

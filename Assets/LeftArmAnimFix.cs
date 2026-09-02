@@ -17,7 +17,9 @@ public class LeftArmAnimFix : MonoBehaviour
     // Update is called once per frame
     void OnAnimatorIK()
     {
-        leftLowerArm.localEulerAngles += offset; 
-        anim.SetBoneLocalRotation(HumanBodyBones.LeftLowerArm,Quaternion.Euler(leftLowerArm.localEulerAngles));
+        if(false == anim.GetBool("defense")){
+            leftLowerArm.localEulerAngles += offset; 
+            anim.SetBoneLocalRotation(HumanBodyBones.LeftLowerArm,Quaternion.Euler(leftLowerArm.localEulerAngles));
+        }
     }
 }
