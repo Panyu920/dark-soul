@@ -34,6 +34,8 @@ public class PlayerInput : MonoBehaviour
     public float Jup;
     public float Jright;
     public Vector3 Dvec;
+    // 跑步键抬起时的速度
+    private float stopRunDmag;
     // pressing signal
     public bool isRunning = false;
     public bool defense = false;
@@ -42,6 +44,7 @@ public class PlayerInput : MonoBehaviour
     private bool lastJump = false;
     public bool roll = false;
     public bool attack = false;
+
     // double trigger
 
 
@@ -52,7 +55,7 @@ public class PlayerInput : MonoBehaviour
     private float velocityDup;
     private float velocityDright;
 
-    private InputState runState =new();
+    public InputState runState =new();
     private InputState jumpState =new();
     private InputState rollState =new();
     private InputState defenseState =new();
@@ -73,6 +76,12 @@ public class PlayerInput : MonoBehaviour
         attackState.Tick(Input.GetKey(KeyAttack),Time.deltaTime);
         
         upState.Tick(Input.GetKey(KeyUp),Time.deltaTime);
+
+        if (Input.GetKeyUp(KeyRun))
+        {
+            stopRunDmag = Dmag;
+            print(Dmag);
+        }
 
         targetDup = Input.GetKey(KeyUp) ? 1.0f : 0.0f - (Input.GetKey(KeyDown) ? 1.0f : 0.0f);
         targetDright = Input.GetKey(KeyRight) ? 1.0f : 0.0f - (Input.GetKey(KeyLeft) ? 1.0f : 0.0f);
@@ -114,6 +123,15 @@ public class PlayerInput : MonoBehaviour
         jump = jumpState.OnPress;
         defense = defenseState.OnPressing;
         attack = attackState.OnPress;
+
+        if(runState.OnExtending)
+        {
+            // print("A:"+Dmag);
+            Dmag = Mathf.Lerp(stopRunDmag,Dmag,-0.1f);
+            // print("B:"+Dmag);
+            stopRunDmag = Dmag;
+        }
+
     }
 
     private void SquareToCircle(ref float x, ref float y)

@@ -11,7 +11,7 @@ public class InputState
     public bool OnExtending;
     public bool OnDelaying;
     public float doubleDuration = 0.2f;
-    public float extendingDuration = 1.0f;
+    public float extendingDuration = 0.5f;
     public float delayingDuration = 0.5f;
 
     private bool currentState;
