@@ -109,7 +109,7 @@ public class PlayerInput : MonoBehaviour
         Dvec = Dup * transform.forward + Dright * transform.right;
 
 
-        isRunning = runState.OnPressing;
+        isRunning = (runState.OnPressing && !runState.OnDelaying) || runState.OnExtending;
         roll = rollState.OnPress || upState.OnDoubleClick;
         jump = jumpState.OnPress;
         defense = defenseState.OnPressing;

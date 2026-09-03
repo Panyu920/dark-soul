@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,8 +51,8 @@ public class ActorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        anim.SetFloat("forward", pi.Dmag * Mathf.Lerp(anim.GetFloat("forward"), pi.isRunning ? 2.0f : 1.0f, 0.5f));
 
+        anim.SetFloat("forward", pi.Dmag * Mathf.Lerp(anim.GetFloat("forward"), pi.isRunning ? 2.0f : 1.0f, 0.5f));
         if (pi.jump)
         {
             anim.SetTrigger("jump");
@@ -75,6 +76,11 @@ public class ActorController : MonoBehaviour
 
         if (false == lockPlanar)
         {
+            if(pi.isRunning && pi.Dmag < 0.1f)
+            {
+                pi.Dmag = Mathf.Lerp(0.2f,0,0.1f);
+                anim.SetFloat("forward",Mathf.Lerp(0.3f,0.1f,0.1f));
+            }
             planarVec = pi.Dmag * model.transform.forward * movingSpeed * (pi.isRunning ? runMultiplyer : 1.0f);
         }
 

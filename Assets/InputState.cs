@@ -8,7 +8,11 @@ public class InputState
     public bool OnPress;
     public bool OnRelease;
     public bool OnDoubleClick;
+    public bool OnExtending;
+    public bool OnDelaying;
     public float doubleDuration = 0.2f;
+    public float extendingDuration = 1.0f;
+    public float delayingDuration = 0.5f;
 
     private bool currentState;
     private bool lastState;
@@ -16,6 +20,8 @@ public class InputState
     // private float lastTime;
 
     private MyTimer doubleClickTimer = new();
+    private MyTimer extendingTimer = new();
+    private MyTimer delayingTimer = new();
     
     
 
@@ -27,8 +33,12 @@ public class InputState
         OnPress=false;
         OnRelease = false;
         OnDoubleClick = false;
+        OnDelaying = false;
+        OnExtending = false;
 
         doubleClickTimer.Tick(dt);
+        delayingTimer.Tick(dt);
+        extendingTimer.Tick(dt);
         if(currentState != lastState)
         {
             if(currentState)
@@ -43,6 +53,7 @@ public class InputState
                 // {
                 //     lastTime = 0;
                 // }
+                StartTimer(delayingTimer,delayingDuration);
 
                 if (doubleClickTimer.state != MyTimer.State.RUN)
                 {
@@ -54,8 +65,21 @@ public class InputState
             }else
             {
                 OnRelease = true;
+                StartTimer(extendingTimer,extendingDuration);
             }
         }
+
+        if(delayingTimer.state == MyTimer.State.RUN)
+        {
+            OnDelaying = true;
+        }
+
+        if(extendingTimer.state == MyTimer.State.RUN)
+        {
+            OnExtending = true;
+            // Debug.Log(1111);
+        }
+
         lastState = currentState;
     }
 
