@@ -19,9 +19,9 @@ public class PlayerInput : MonoBehaviour
     public KeyCode KeyJLeft = KeyCode.LeftArrow;
     public KeyCode KeyJRight = KeyCode.RightArrow;
     public KeyCode KeyDefense = KeyCode.F;
-    [Header("===== Key Setting =====")]
+    public KeyCode KeyLock = KeyCode.Y;
+    [Header("===== Mouse Setting =====")]
     public KeyCode KeyAttack = KeyCode.Mouse0;
-    [Header("===== Key Setting =====")]
     public bool mouseEnable = true;
     public float mouseSensitivityY;
     public float mouseSensitivityX;
@@ -44,6 +44,7 @@ public class PlayerInput : MonoBehaviour
     private bool lastJump = false;
     public bool roll = false;
     public bool attack = false;
+    public bool lockOn = false;
 
     // double trigger
 
@@ -61,6 +62,7 @@ public class PlayerInput : MonoBehaviour
     private InputState defenseState =new();
     private InputState attackState =new();
     private InputState upState =new();
+    private InputState lockState =new();
 
 
 
@@ -74,13 +76,14 @@ public class PlayerInput : MonoBehaviour
         rollState.Tick(Input.GetKey(KeyRoll),Time.deltaTime);
         defenseState.Tick(Input.GetKey(KeyDefense),Time.deltaTime);
         attackState.Tick(Input.GetKey(KeyAttack),Time.deltaTime);
+        lockState.Tick(Input.GetKey(KeyLock),Time.deltaTime);
         
         upState.Tick(Input.GetKey(KeyUp),Time.deltaTime);
 
-        if (Input.GetKeyUp(KeyRun))
+        if (runState.OnRelease)
         {
             stopRunDmag = Dmag;
-            print(Dmag);
+            // print(Dmag);
         }
 
         targetDup = Input.GetKey(KeyUp) ? 1.0f : 0.0f - (Input.GetKey(KeyDown) ? 1.0f : 0.0f);
@@ -123,8 +126,9 @@ public class PlayerInput : MonoBehaviour
         jump = jumpState.OnPress;
         defense = defenseState.OnPressing;
         attack = attackState.OnPress;
+        lockOn = lockState.OnPress;
 
-        if(runState.OnExtending)
+        if(runState.OnExtending || runState.OnRelease)
         {
             // print("A:"+Dmag);
             Dmag = Mathf.Lerp(stopRunDmag,Dmag,-0.1f);

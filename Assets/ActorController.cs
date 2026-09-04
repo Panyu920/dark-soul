@@ -10,6 +10,7 @@ public class ActorController : MonoBehaviour
 {
     public GameObject model;
     private CapsuleCollider col;
+    private CameraController cameraController;
     // Start is called before the first frame update
 
     [Space(10)]
@@ -40,19 +41,36 @@ public class ActorController : MonoBehaviour
     // 动画位移
     private Vector3 deltaPosition;
 
+    private bool trackDeriction;
+
     void Awake()
     {
         pi = GetComponent<PlayerInput>();
         anim = model.GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
         col = GetComponent<CapsuleCollider>();
+        cameraController = GetComponentInChildren<CameraController>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (cameraController.isLock)
+        {
+            Vector3 localDvec = transform.InverseTransformVector(pi.Dvec);
+            anim.SetFloat("forward", localDvec.z * (pi.isRunning && !pi.runState.OnExtending ? 2.0f : 1.0f));
+            anim.SetFloat("right", localDvec.x * (pi.isRunning && !pi.runState.OnExtending ? 2.0f : 1.0f));
 
-        anim.SetFloat("forward", pi.Dmag * Mathf.Lerp(anim.GetFloat("forward"), pi.isRunning && !pi.runState.OnExtending? 2.0f : 1.0f, 0.5f));
+
+        }
+        else
+        {
+
+            // print(pi.Dmag);
+            anim.SetFloat("forward", pi.Dmag * Mathf.Lerp(anim.GetFloat("forward"), pi.isRunning && !pi.runState.OnExtending ? 3.0f : 1.0f, 0.5f));
+            anim.SetFloat("right", 0);
+        }
+
         if (pi.jump)
         {
             anim.SetTrigger("jump");
@@ -62,26 +80,53 @@ public class ActorController : MonoBehaviour
         {
             anim.SetTrigger("roll");
         }
-        anim.SetBool("defense",pi.defense);
+        anim.SetBool("defense", pi.defense);
 
         if (pi.attack && anim.GetBool("onGround"))
         {
             anim.SetTrigger("attack");
             pi.attack = false;
         }
-        if (pi.Dmag > 0.1f)
-        {
-            model.transform.forward = Vector3.Slerp(model.transform.forward, pi.Dvec, 0.3f);
-        }
-
-        if (false == lockPlanar)
-        {
-            planarVec = pi.Dmag * model.transform.forward * movingSpeed * (pi.isRunning ? runMultiplyer : 1.0f);
-        }
 
         if (rigid.velocity.magnitude > 5.0f)
         {
             anim.SetTrigger("roll");
+        }
+
+        if (pi.lockOn)
+        {
+            cameraController.LockUnlock();
+        }
+
+        if (cameraController.isLock)
+        {
+            if (false == lockPlanar)
+            {
+                planarVec = pi.Dmag * pi.Dvec * movingSpeed * (pi.isRunning ? runMultiplyer : 1.0f);
+            }
+
+            if (trackDeriction == false)
+            {
+
+                model.transform.forward = transform.forward;
+            }
+            else
+            {
+                model.transform.forward = planarVec.normalized;
+            }
+        }
+        else
+        {
+
+            if (pi.Dmag > 0.1f)
+            {
+                model.transform.forward = Vector3.Slerp(model.transform.forward, pi.Dvec, 0.3f);
+            }
+
+            if (false == lockPlanar)
+            {
+                planarVec = pi.Dmag * model.transform.forward * movingSpeed * (pi.isRunning ? runMultiplyer : 1.0f);
+            }
         }
     }
 
@@ -91,15 +136,18 @@ public class ActorController : MonoBehaviour
         deltaPosition = Vector3.zero;
         // rigid.position += planarVec * Time.fixedDeltaTime * movingSpeed;) 
         // print(rigid.velocity.magnitude);    
-        if (true == pi.roll )
+        if (true == pi.roll)
         {
-            if ( rigid.velocity.magnitude < 0.2f){
+            if (rigid.velocity.magnitude < 0.2f)
+            {
                 rigid.velocity = model.transform.forward * 3;
             }
             // print(1111);
-        }else {
-        rigid.velocity = new Vector3(planarVec.x, rigid.velocity.y, planarVec.z) + thrustVec;
-        thrustVec = Vector3.zero;
+        }
+        else
+        {
+            rigid.velocity = new Vector3(planarVec.x, rigid.velocity.y, planarVec.z) + thrustVec;
+            thrustVec = Vector3.zero;
         }
     }
 
@@ -109,6 +157,7 @@ public class ActorController : MonoBehaviour
         pi.inputEnabled = false;
         lockPlanar = true;
         thrustVec = new Vector3(0, verticalSpeed, 0);
+        trackDeriction = true;
     }
 
 
@@ -118,6 +167,7 @@ public class ActorController : MonoBehaviour
         lockPlanar = false;
         pi.roll = false;
         col.material = frictionOne;
+        trackDeriction = false;
     }
 
     void OnGroundExit()
@@ -144,6 +194,7 @@ public class ActorController : MonoBehaviour
     {
         pi.inputEnabled = false;
         lockPlanar = true;
+        trackDeriction = true;
         if (rigid.velocity == Vector3.zero)
         {
             rigid.velocity = model.transform.forward * 1;
@@ -168,43 +219,43 @@ public class ActorController : MonoBehaviour
     {
         pi.inputEnabled = false;
         lerpWeight = 1.0f;
-            // anim.ResetTrigger("attack");
+        // anim.ResetTrigger("attack");
     }
     void OnAttack1hAUpdate()
     {
         int layerIndex = anim.GetLayerIndex("Attack");
         float currentWeight = anim.GetLayerWeight(layerIndex);
-        currentWeight = Mathf.Lerp(currentWeight,lerpWeight,0.1f);
-        anim.SetLayerWeight(layerIndex,currentWeight);
+        currentWeight = Mathf.Lerp(currentWeight, lerpWeight, 0.1f);
+        anim.SetLayerWeight(layerIndex, currentWeight);
         thrustVec = model.transform.forward * anim.GetFloat("attack1hAVelocity");
     }
     void OnAttack1hAExit()
     {
         // anim.SetLayerWeight(anim.GetLayerIndex("Attack"),1.0f);
         // pi.inputEnabled = false;
-            // print(111);
+        // print(111);
     }
-    
+
     void OnAttackIdle()
     {
         pi.inputEnabled = true;
-            pi.attack = false;
+        pi.attack = false;
         // anim.SetLayerWeight(anim.GetLayerIndex("Attack"),0.0f);
-            lerpWeight = 0;
+        lerpWeight = 0;
     }
 
     void OnAttackIdleUpdate()
     {
         int layerIndex = anim.GetLayerIndex("Attack");
         float currentWeight = anim.GetLayerWeight(layerIndex);
-        currentWeight = Mathf.Lerp(currentWeight,lerpWeight,0.1f);
-        anim.SetLayerWeight(layerIndex,currentWeight);
+        currentWeight = Mathf.Lerp(currentWeight, lerpWeight, 0.1f);
+        anim.SetLayerWeight(layerIndex, currentWeight);
     }
 
     bool CheckState(string state, string layerName)
     {
         int layerIndex = anim.GetLayerIndex(layerName);
-        return  anim.GetCurrentAnimatorStateInfo(layerIndex).IsName(state);
+        return anim.GetCurrentAnimatorStateInfo(layerIndex).IsName(state);
     }
 
     void OnAnimatorRM(object _deltaPosition)
@@ -212,7 +263,7 @@ public class ActorController : MonoBehaviour
         // print(_deltaPosition);
         if (CheckState("attack1hC", "Attack"))
         {
-            deltaPosition += (Vector3)_deltaPosition;  
+            deltaPosition += (Vector3)_deltaPosition;
         }
     }
 }
