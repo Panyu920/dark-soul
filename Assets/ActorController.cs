@@ -30,13 +30,13 @@ public class ActorController : MonoBehaviour
     [SerializeField]
     private float verticalSpeed = 5.0f;
     [SerializeField]
-    private float rollSpeed = 2.0f;
+    // private float rollSpeed = 2.0f;
     private bool lockPlanar;
 
     public Rigidbody rigid;
 
     public float runMultiplyer = 2.7f;
-    private float lerpWeight = 0.0f;
+    // private float lerpWeight = 0.0f;
 
     // 动画位移
     private Vector3 deltaPosition;
@@ -218,15 +218,15 @@ public class ActorController : MonoBehaviour
     void OnAttack1hAEnter()
     {
         pi.inputEnabled = false;
-        lerpWeight = 1.0f;
+        // lerpWeight = 1.0f;
         // anim.ResetTrigger("attack");
     }
     void OnAttack1hAUpdate()
     {
-        int layerIndex = anim.GetLayerIndex("Attack");
-        float currentWeight = anim.GetLayerWeight(layerIndex);
-        currentWeight = Mathf.Lerp(currentWeight, lerpWeight, 0.1f);
-        anim.SetLayerWeight(layerIndex, currentWeight);
+        // int layerIndex = anim.GetLayerIndex("Attack");
+        // float currentWeight = anim.GetLayerWeight(layerIndex);
+        // currentWeight = Mathf.Lerp(currentWeight, lerpWeight, 0.1f);
+        // anim.SetLayerWeight(layerIndex, currentWeight);
         thrustVec = model.transform.forward * anim.GetFloat("attack1hAVelocity");
     }
     void OnAttack1hAExit()
@@ -241,15 +241,15 @@ public class ActorController : MonoBehaviour
         pi.inputEnabled = true;
         pi.attack = false;
         // anim.SetLayerWeight(anim.GetLayerIndex("Attack"),0.0f);
-        lerpWeight = 0;
+        // lerpWeight = 0;
     }
 
     void OnAttackIdleUpdate()
     {
-        int layerIndex = anim.GetLayerIndex("Attack");
-        float currentWeight = anim.GetLayerWeight(layerIndex);
-        currentWeight = Mathf.Lerp(currentWeight, lerpWeight, 0.1f);
-        anim.SetLayerWeight(layerIndex, currentWeight);
+        // int layerIndex = anim.GetLayerIndex("Attack");
+        // float currentWeight = anim.GetLayerWeight(layerIndex);
+        // currentWeight = Mathf.Lerp(currentWeight, lerpWeight, 0.1f);
+        // anim.SetLayerWeight(layerIndex, currentWeight);
     }
 
     bool CheckState(string state, string layerName)
@@ -258,11 +258,18 @@ public class ActorController : MonoBehaviour
         return anim.GetCurrentAnimatorStateInfo(layerIndex).IsName(state);
     }
 
+
+    bool CheckStateTag(string tag, string layerName)
+    {
+        int layerIndex = anim.GetLayerIndex(layerName);
+        return anim.GetCurrentAnimatorStateInfo(layerIndex).IsTag(tag);
+    }
     void OnAnimatorRM(object _deltaPosition)
     {
         // print(_deltaPosition);
-        if (CheckState("attack1hC", "Attack"))
+        if (CheckStateTag("attack", "Base Layer"))
         {
+            // print(111);
             deltaPosition += (Vector3)_deltaPosition;
         }
     }

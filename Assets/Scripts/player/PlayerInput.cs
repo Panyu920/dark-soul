@@ -162,11 +162,4 @@ public class PlayerInput : MonoBehaviour
         lastJump = jump;
     }
 
-    void Attack()
-    {
-        if (Input.GetMouseButtonDown((int)MouseButton.Right))
-        {
-            attack = true;
-        }
-    }
 }
